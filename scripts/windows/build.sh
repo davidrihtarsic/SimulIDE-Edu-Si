@@ -41,11 +41,30 @@ if [[ ${#executables[@]} != 1 ]]; then
 fi
 cp "${executables[0]}" "$package_dir/simulide.exe"
 
+# Build a small diagnostic against the same Qt as SimulIDE. Run it later
+# with the development directories removed from PATH to check the package.
+mkdir -p build_windows/tls-check
+cd build_windows/tls-check
+qmake-qt5 -spec win32-g++ "$repo_dir/scripts/windows/tls-check.pro" 'CONFIG+=release' 'CONFIG-=debug_and_release'
+mingw32-make -j2
+cp tls-check.exe "$package_dir/"
+cd "$repo_dir"
+
 # MSYS2 names qmake qmake-qt5; windeployqt also searches for qmake.exe.
 if [[ ! -f /mingw64/bin/qmake.exe ]]; then
     cp /mingw64/bin/qmake-qt5.exe /mingw64/bin/qmake.exe
 fi
 windeployqt-qt5 --release --dir "$(cygpath -w "$package_dir")" "$(cygpath -w "$package_dir/simulide.exe")"
+
+# Qt can resolve OpenSSL with LoadLibrary, so the normal PE import scan
+# cannot discover it. Always ship the matching runtime from this toolchain.
+for library in libssl-3-x64.dll libcrypto-3-x64.dll; do
+    if [[ ! -f "/mingw64/bin/$library" ]]; then
+        echo "Missing $library: install mingw-w64-x86_64-openssl." >&2
+        exit 1
+    fi
+    cp "/mingw64/bin/$library" "$package_dir/"
+done
 
 # windeployqt gathers Qt plugins, but MSYS2 libraries can have additional
 # dependencies (zlib, GCC runtime, image/audio libraries). Copy their full

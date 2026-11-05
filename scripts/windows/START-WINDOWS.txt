@@ -11,6 +11,11 @@ Tocen commit gradnje: SOURCE-COMMIT.txt
 Knjiznice in orodja gradnje: BUILD-PACKAGES.txt
 Avtorstvo in licence: copyright.txt, COPYING in licenses/
 
+Ce upravljalnik komponent javi napako TLS, odprite terminal v tej mapi
+in izvedite tls-check.exe. Program izpise pricakovano in nalozeno
+razlicico TLS. Za preizkus prenosa seznama komponent izvedite:
+tls-check.exe "https://simulide.com/p/direct_downloads/components/dloadset.php?file=components.txt"
+
 Uspeh samodejnega preverjanja zagona se ne pomeni, da so vse funkcije
 rocno preizkusene. Pred uporabo pri pouku preverite svoja vezja,
 simulacijo in morebitna zunanja orodja za mikrokrmilnike.

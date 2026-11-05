@@ -38,6 +38,7 @@ jobs:
             mingw-w64-x86_64-qt5-serialport
             mingw-w64-x86_64-qt5-tools
             mingw-w64-x86_64-angleproject
+            mingw-w64-x86_64-openssl
             mingw-w64-x86_64-zlib
       - name: Build and package
         run: bash scripts/windows/build.sh
@@ -49,6 +50,8 @@ jobs:
           Remove-Item Env:QT_PLUGIN_PATH -ErrorAction SilentlyContinue
           Remove-Item Env:QT_QPA_PLATFORM_PLUGIN_PATH -ErrorAction SilentlyContinue
           $folder = Join-Path $env:GITHUB_WORKSPACE 'dist/SimulIDE-Edu-Si-Windows-x64'
+          & "$folder/tls-check.exe"
+          if ($LASTEXITCODE -ne 0) { throw 'Packaged Qt could not initialize TLS.' }
           $process = Start-Process -FilePath "$folder/simulide.exe" -WorkingDirectory $folder -PassThru
           try {
             if (-not $process.WaitForInputIdle(30000)) { throw 'Application did not become ready.' }
