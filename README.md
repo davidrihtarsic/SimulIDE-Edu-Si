@@ -17,6 +17,12 @@ Ime Si označuje slovenski pedagoški kontekst; uporabniški vmesnik ni v celoti
 
 Prilagoditve ohranjajo obstoječe električne modele in položaje priključkov. Vezja z ustreznimi komponentami ob odpiranju dobijo novi videz. Nekatere sličice komponent v knjižnici še prikazujejo izvirne simbole.
 
+## Primer sheme
+
+![Primer sheme v SimulIDE-Edu-Si: Arduino Uno, potisna tipka s kontaktnimi krožci, LED, napajalna potenciala in DC motor s prikazom RPM ter osciloskop.](docs/images/simulide-edu-primer-sheme.png)
+
+Shema med simulacijo prikazuje belo ozadje brez mreže, poenoteno debelino priključnih črt, prilagojene simbole LED in napajalnih potencialov, kontaktne krožce potisne tipke ter motor z animirano črko M in podatkom o hitrosti. Osciloskop prikazuje krmilni signal.
+
 ## Prevajanje v Linuxu
 
 Potrebujete Git, prevajalnik C++, Make ter razvojna orodja in knjižnice **Qt 5**:
