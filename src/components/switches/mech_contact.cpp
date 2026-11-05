@@ -164,6 +164,16 @@ void MechContact::setNClose( bool nc )
     update();
 }
 
+void MechContact::drawContact( QPainter* p, const QPointF& pos )
+{
+    p->save();
+    p->setPen( QPen( Qt::black, 1.5, Qt::SolidLine
+                   , Qt::RoundCap, Qt::RoundJoin ) );
+    p->setBrush( Qt::white );
+    p->drawEllipse( pos, 2.5, 2.5 );
+    p->restore();
+}
+
 void MechContact::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )
 {
     if( m_ButHidden ) return;
@@ -181,6 +191,11 @@ void MechContact::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget
             p->drawLine(-10, -16-offset, 10, -18-offset );
         else                                                    // Switch is oppened
             p->drawLine(-10.5, -16-offset, 8, -24-offset );
+
+        double contactY = -16-offset;
+        drawContact( p, QPointF(-10, contactY) );               // Moving contact pivot
+        for( int j=0; j<m_numthrows; ++j )
+            drawContact( p, QPointF(10, contactY-8*j) );        // Fixed contacts
     }
     if( m_numPoles > 1 )
     {

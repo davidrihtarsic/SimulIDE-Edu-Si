@@ -32,6 +32,7 @@ class MechContact : public Component, public eElement
 
     protected:
         void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
+        void drawContact( QPainter* p, const QPointF& pos );
 
         virtual void setSwitch( bool on );
 

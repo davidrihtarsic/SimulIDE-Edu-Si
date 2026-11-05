@@ -123,6 +123,10 @@ void Push::paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* 
         int offset = 16*i;
         if( m_closed ) p->drawLine(-9,-2-offset, 9,-2-offset );
         else           p->drawLine(-9,-6-offset, 9,-6-offset );
+
+        double contactY = -offset;
+        drawContact( p, QPointF(-10, contactY) );
+        drawContact( p, QPointF( 10, contactY) );
     }
     if( m_numPoles > 1 )
     {
