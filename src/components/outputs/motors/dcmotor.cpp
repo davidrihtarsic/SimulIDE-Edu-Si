@@ -41,7 +41,7 @@ DcMotor::DcMotor( QString type, QString id )
 {
     m_graphical = true;
     
-    m_area = QRectF( -35,-33, 70, 66 );
+    m_area = QRectF( -36, -33, 72, 82 );
     m_color = QColor( 50, 50, 70 );
     m_ang  = 0;
     m_speed = 0;
@@ -198,44 +198,51 @@ void DcMotor::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w 
 {
     Component::paint( p, o, w );
 
-    p->setBrush( QColor(50, 70, 100) );
-    p->drawEllipse(-32,-32, 64, 64 );
+    p->setBrush( Qt::NoBrush );
+    p->drawLine( QPointF(-36, 0), QPointF(-27, 0) );
+    p->drawLine( QPointF( 27, 0), QPointF( 36, 0) );
+    p->drawEllipse( QRectF(-27, -27, 54, 54) );
 
-    p->setBrush( QColor(255, 0, 0) );
-    p->drawRoundedRect(-36,-4, 8, 8, 4, 4 );
-    p->setBrush( QColor(0, 0, 0) );
-    p->drawRoundedRect( 28,-4, 8, 8, 4, 4 );
+    QFont motorFont = p->font();
+    motorFont.setBold( true );
+    motorFont.setPixelSize( 18 );
+    p->setFont( motorFont );
+    p->drawText( QRectF(-20, -15, 40, 30), Qt::AlignCenter, "M" );
 
-    p->setPen( QColor(0, 0, 0) );
-    p->setBrush( QColor(255, 255, 255) );
-    p->drawEllipse(-26,-26, 52, 52 );
-
-    // rotating pointer
-    p->setPen ( QColor(0, 0, 0) );
-    p->setBrush( QColor(50, 70, 100) );
-    p->drawPie(-24,-24, 48, 48, m_ang-120, 240 );
-
-    p->setBrush( QColor(50, 70, 100) );
-    p->drawEllipse(-20,-20, 40, 40 );
-
-    if( m_speed != 0 ) // Speed and Direction Indicator
+    if( Simulator::self()->isRunning() )
     {
-        double speed = m_speed;
-        double exedd = 0;
-        if( m_speed > 1 ){
-            exedd = m_speed -1;
-            speed = 1;
-        }
-        else if( m_speed < -1 ){
-            exedd = m_speed +1;
-            speed = -1;
-        }
-        p->setPen ( QColor(50, 70, 100) );
-        p->setBrush( QColor(100, 200, 70) );
-        p->drawPie(-20,-20, 40, 40, 16*90, speed*16*180 );
+        int rpm = qRound( -m_speed*m_rpm );
 
-        p->setBrush( QColor(200, 100, 70) );
-        p->drawPie(-20,-20, 40, 40, -16*90, exedd*16*180 );
+        if( rpm != 0 )
+        {
+            QPainterPath arrow;
+            if( rpm > 0 )
+            {
+                arrow.moveTo( -17, -20 );
+                arrow.cubicTo( -9, -30, 9, -30, 17, -20 );
+                arrow.moveTo( 17, -20 );
+                arrow.lineTo( 11, -21 );
+                arrow.moveTo( 17, -20 );
+                arrow.lineTo( 16, -14 );
+            }
+            else
+            {
+                arrow.moveTo( 17, -20 );
+                arrow.cubicTo( 9, -30, -9, -30, -17, -20 );
+                arrow.moveTo( -17, -20 );
+                arrow.lineTo( -11, -21 );
+                arrow.moveTo( -17, -20 );
+                arrow.lineTo( -16, -14 );
+            }
+            p->drawPath( arrow );
+        }
+
+        QFont rpmFont = p->font();
+        rpmFont.setBold( false );
+        rpmFont.setPixelSize( 10 );
+        p->setFont( rpmFont );
+        p->drawText( QRectF(-36, 32, 72, 15), Qt::AlignCenter
+                   , QString::number(rpm)+" RPM" );
     }
     Component::paintSelected( p );
 }
