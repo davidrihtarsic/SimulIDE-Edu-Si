@@ -7,6 +7,7 @@
 
 #include <QIcon>
 #include <QPalette>
+#include <QColor>
 
 enum class Theme { Light, Dark };
 
@@ -22,6 +23,11 @@ class ThemeManager
         Theme theme() { return m_currentTheme; }
         bool isDark() { return m_isDark; }
 
+        QColor lightCircuitBackground() const;
+        bool hasCustomCircuitBackground() const { return m_hasCustomCircuitBackground; }
+        void setCircuitBackground( const QColor& color );
+        void resetCircuitBackground();
+
         uint32_t* getColorPtr( uint index );
 
         QIcon icon( QString iconFile );
@@ -31,6 +37,9 @@ class ThemeManager
 
         Theme m_currentTheme = Theme::Light;
         bool  m_isDark = false;
+        bool  m_hasCustomCircuitBackground = false;
+
+        uint32_t m_customCircuitBackground = 0;
 
         std::vector<uint32_t> m_darkColors;
         std::vector<uint32_t> m_lightColors;

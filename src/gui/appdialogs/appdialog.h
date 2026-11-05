@@ -29,6 +29,8 @@ class AppDialog : public QDialog, private Ui::AppDialog
         // App Settings
         void on_language_currentIndexChanged( int index );
         void on_theme_currentIndexChanged( int index );
+        void on_canvasColor_clicked();
+        void on_resetCanvasColor_clicked();
         void on_fontScale_valueChanged( double scale );
         void on_setPathButton_clicked();
         void on_userPath_editingFinished();
@@ -65,6 +67,7 @@ class AppDialog : public QDialog, private Ui::AppDialog
 
     private:
         void updtHelp();
+        void updateCanvasColorButton();
         void updtSpeed();
         void updtSpeedPer();
         void updtReactStep();

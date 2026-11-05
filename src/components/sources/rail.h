@@ -23,6 +23,8 @@ class Rail : public Component, public eElement
         double volt() { return m_volt; }
         void setVolt( double v );
 
+        bool setPropStr( QString prop, QString val ) override;
+        void setup() override;
         void stamp() override;
 
     protected:
@@ -30,6 +32,8 @@ class Rail : public Component, public eElement
         void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
     private:
+        void updateVoltageLabel();
+
         double m_volt;
 
         IoPin* m_out;

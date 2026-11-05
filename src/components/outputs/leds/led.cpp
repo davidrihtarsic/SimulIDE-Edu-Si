@@ -30,7 +30,7 @@ LibraryItem* Led::libraryItem()
 Led::Led( QString type, QString id )
    : LedBase( type, id )
 {
-    m_area = QRect(-8, -10, 20, 20 );
+    m_area = QRect(-8, -16, 20, 26 );
 
     m_isLinker = true;
 
@@ -77,17 +77,38 @@ void Led::contextMenuEvent( QGraphicsSceneContextMenuEvent* event )
 
 void Led::drawBackground( QPainter* p )
 {
-    p->drawEllipse(-6,-8, 16, 16 );
+    Q_UNUSED( p );
 }
 
 void Led::drawForeground( QPainter* p )
 {
+    QColor lightColor = p->pen().color();
+    QColor symbolColor( *m_foreColor );
+
+    QPen pen( symbolColor, 1.5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
+    p->setPen( pen );
+
+    if( m_intensity > 0 ) p->setBrush( lightColor );
+    else                  p->setBrush( Qt::NoBrush );
+
     static const QPointF points[3] = {
         QPointF( 8, 0 ),
         QPointF(-3,-6 ),
         QPointF(-3, 6 ) };
 
     p->drawPolygon( points, 3 );
-    p->drawLine( 8,-4, 8, 4 );
-    p->drawLine(-6, 0, 10, 0 );
+    p->drawLine( 8,-6, 8, 6 );
+    p->drawLine(-6, 0,-3, 0 );
+    p->drawLine( 8, 0,10, 0 );
+
+    p->setBrush( Qt::NoBrush );
+
+    // Light emission arrows.
+    p->drawLine( QPointF(-2,-8), QPointF( 1,-11) );
+    p->drawLine( QPointF( 1,-11), QPointF(-1,-10) );
+    p->drawLine( QPointF( 1,-11), QPointF( 0, -9) );
+
+    p->drawLine( QPointF( 4,-8), QPointF( 7,-11) );
+    p->drawLine( QPointF( 7,-11), QPointF( 5,-10) );
+    p->drawLine( QPointF( 7,-11), QPointF( 6, -9) );
 }

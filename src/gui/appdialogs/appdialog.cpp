@@ -4,6 +4,8 @@
  ***( see copyright.txt file at root folder )*******************************/
 
 #include <math.h>
+#include <QColorDialog>
+#include <QSettings>
 
 #include "appdialog.h"
 #include "mainwindow.h"
@@ -28,6 +30,7 @@ AppDialog::AppDialog( QWidget* parent )
     language->setFixedWidth( 80*m_scale );
     theme->setCurrentIndex( (int)ThemeManager::self()->theme() );
     theme->setFixedWidth( 80*m_scale );
+    updateCanvasColorButton();
     fontName->setCurrentText( MainWindow::self()->defaultFontName() );
     fontName->setFixedWidth( 80*m_scale );
     fontScale->setValue( m_scale );
@@ -135,6 +138,43 @@ void AppDialog::on_language_currentIndexChanged( int index )
 void AppDialog::on_theme_currentIndexChanged( int index )
 {
     ThemeManager::self()->setTheme( (Theme)index );
+    updateCanvasColorButton();
+}
+
+void AppDialog::on_canvasColor_clicked()
+{
+    QColor color = QColorDialog::getColor(
+        ThemeManager::self()->lightCircuitBackground(), this,
+        tr("Select Circuit Background Color"), QColorDialog::DontUseNativeDialog );
+
+    if( !color.isValid() ) return;
+
+    ThemeManager::self()->setCircuitBackground( color );
+    MainWindow::self()->settings()->setValue( "Circuit/backgroundColor", color.name() );
+    updateCanvasColorButton();
+}
+
+void AppDialog::on_resetCanvasColor_clicked()
+{
+    ThemeManager::self()->resetCircuitBackground();
+    MainWindow::self()->settings()->remove( "Circuit/backgroundColor" );
+    updateCanvasColorButton();
+}
+
+void AppDialog::updateCanvasColorButton()
+{
+    QColor color = ThemeManager::self()->lightCircuitBackground();
+    QString textColor = color.lightness() < 128 ? "white" : "black";
+
+    canvasColor->setText( color.name().toUpper() );
+    canvasColor->setStyleSheet(
+        QString("QPushButton { background-color: %1; color: %2; }")
+        .arg( color.name(), textColor ) );
+
+    bool lightTheme = !ThemeManager::self()->isDark();
+    canvasColor->setEnabled( lightTheme );
+    resetCanvasColor->setEnabled(
+        lightTheme && ThemeManager::self()->hasCustomCircuitBackground() );
 }
 
 void AppDialog::on_fontScale_valueChanged( double scale )

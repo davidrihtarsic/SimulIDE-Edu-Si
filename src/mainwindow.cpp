@@ -160,6 +160,12 @@ void MainWindow::readSettings()
     Theme theme = Theme::Light;
     if ( m_settings->contains("theme") ) theme = (Theme)m_settings->value("theme").toInt();
     ThemeManager::self()->setTheme( theme );
+
+    if( m_settings->contains("Circuit/backgroundColor") )
+    {
+        QColor color( m_settings->value("Circuit/backgroundColor").toString() );
+        ThemeManager::self()->setCircuitBackground( color );
+    }
 }
 
 void MainWindow::writeSettings()

@@ -34,7 +34,7 @@ Rail::Rail( QString type, QString id )
 {
     setLabelPos(-64,-24 );
 
-    m_area = QRect(-2, -8, 12, 16 );
+    m_area = QRect(-4, -8, 15, 16 );
     m_changed = false;
 
     m_pin.resize(1);
@@ -58,8 +58,29 @@ void Rail::setVolt( double v )
 {
     Simulator::self()->pauseSim();
     m_volt = v;
+    updateVoltageLabel();
     stamp();
     Simulator::self()->resumeSim();
+}
+
+bool Rail::setPropStr( QString prop, QString val )
+{
+    bool ok = Component::setPropStr( prop, val );
+    if( prop == "Voltage" ) updateVoltageLabel();
+    return ok;
+}
+
+void Rail::setup()
+{
+    Component::setup();
+    updateVoltageLabel();
+}
+
+void Rail::updateVoltageLabel()
+{
+    QString voltage = QString::number( m_volt, 'g', 12 );
+    if( m_volt > 0 ) voltage.prepend( '+' );
+    setValLabelText( voltage.append( 'V' ) );
 }
 
 void Rail::stamp()
@@ -72,31 +93,19 @@ void Rail::stamp()
 QPainterPath Rail::shape() const
 {
     QPainterPath path;
-
-    QVector<QPointF> points;
-
-    points << QPointF(-4,-8 )
-           << QPointF(-4, 8 )
-           << QPointF( 8,  1 )
-           << QPointF( 8, -1 );
-
-    path.addPolygon( QPolygonF(points) );
-    path.closeSubpath();
+    path.addRect( QRectF( -4, -8, 15, 16 ) );
     return path;
 }
 
 void Rail::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )
 {
     Component::paint( p, o, w );
-    p->setBrush( QColor( 255, 166, 0 ) );
-    //p->drawRoundedRect( QRectF( -8, -8, 16, 16 ), 2, 2);
-    static const QPointF points[4] = {
-        QPointF(-1.5,-6.5 ),
-        QPointF(-1.5, 6.5 ),
-        QPointF( 9,  1 ),
-        QPointF( 9, -1 )            };
+    p->setBrush( Qt::NoBrush );
 
-    p->drawPolygon(points, 4);
+    // Rail is rotated 90 degrees by default. In local coordinates the
+    // vertical line therefore becomes the horizontal IEEE potential bar.
+    p->drawLine( QPointF( 0, -6 ), QPointF( 0, 6 ) );
+    p->drawLine( QPointF( 0,  0 ), QPointF( 9, 0 ) );
 
     Component::paintSelected( p );
 }

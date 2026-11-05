@@ -27,7 +27,7 @@ ThemeManager::ThemeManager()
     m_darkColors[2] = 0xFF000000;  // Comp back
     m_darkColors[3] = 0xFFD0D0C5;  // Comp fore, Pin, Conn
 
-    m_lightColors[0] = 0xFFF0F0D2;
+    m_lightColors[0] = 0xFFF0F0D2;  // Circuit background
     m_lightColors[1] = 0xFFD2D2D2;
     m_lightColors[2] = 0xFFFFFFFF;
     m_lightColors[3] = 0xFF000000;
@@ -90,7 +90,37 @@ void ThemeManager::setTheme( Theme theme )
     for( uint i=0; i<m_colors.size(); ++i )
         m_colors[i] = m_isDark? m_darkColors[i] : m_lightColors[i];
 
+    if( !m_isDark && m_hasCustomCircuitBackground )
+        m_colors[0] = m_customCircuitBackground;
+
     Circuit::self()->update();
+}
+
+QColor ThemeManager::lightCircuitBackground() const
+{
+    uint32_t color = m_hasCustomCircuitBackground
+                   ? m_customCircuitBackground
+                   : m_lightColors[0];
+    return QColor( color );
+}
+
+void ThemeManager::setCircuitBackground( const QColor& color )
+{
+    if( !color.isValid() ) return;
+
+    m_customCircuitBackground = color.rgba();
+    m_hasCustomCircuitBackground = true;
+
+    if( !m_isDark ) m_colors[0] = m_customCircuitBackground;
+    if( Circuit::self() ) Circuit::self()->update();
+}
+
+void ThemeManager::resetCircuitBackground()
+{
+    m_hasCustomCircuitBackground = false;
+
+    if( !m_isDark ) m_colors[0] = m_lightColors[0];
+    if( Circuit::self() ) Circuit::self()->update();
 }
 
 uint32_t* ThemeManager::getColorPtr( uint index )
