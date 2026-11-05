@@ -41,7 +41,7 @@ DcMotor::DcMotor( QString type, QString id )
 {
     m_graphical = true;
     
-    m_area = QRectF( -36, -33, 72, 82 );
+    m_area = QRectF( -36, -42, 72, 84 );
     m_color = QColor( 50, 50, 70 );
     m_ang  = 0;
     m_speed = 0;
@@ -51,15 +51,9 @@ DcMotor::DcMotor( QString type, QString id )
     m_pin.resize( 2 );
     m_ePin[0] = m_pin[0] = new Pin( 180, QPoint(-40,0), m_id+"-lPin", 0, this);
     m_pin[0]->setLength( 4 );
-    m_pin[0]->setFontSize( 9 );
-    m_pin[0]->setSpace( 1.7 );
-    m_pin[0]->setLabelText("+");
 
     m_ePin[1] =m_pin[1] = new Pin( 0, QPoint(40,0), m_id+"-rPin", 1, this);
     m_pin[1]->setLength( 4 );
-    m_pin[1]->setFontSize( 9 );
-    m_pin[1]->setSpace( 1.7 );
-    m_pin[1]->setLabelText("–");  // U+2013
 
     setShowId( true );
     setLabelPos(-22,-48, 0);
@@ -199,50 +193,59 @@ void DcMotor::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w 
     Component::paint( p, o, w );
 
     p->setBrush( Qt::NoBrush );
-    p->drawLine( QPointF(-36, 0), QPointF(-27, 0) );
-    p->drawLine( QPointF( 27, 0), QPointF( 36, 0) );
-    p->drawEllipse( QRectF(-27, -27, 54, 54) );
+    p->drawLine( QPointF(-36, 0), QPointF(-22, 0) );
+    p->drawLine( QPointF( 22, 0), QPointF( 36, 0) );
+    p->drawEllipse( QRectF(-22, -22, 44, 44) );
+
+    QPen symbolPen = p->pen();
+    QPen polarityPen( Qt::black, 1.5, Qt::SolidLine
+                    , Qt::RoundCap, Qt::RoundJoin );
+    p->setPen( polarityPen );
+    p->drawLine( QPointF(-17.5, 0), QPointF(-12.5, 0) );
+    p->drawLine( QPointF(-15, -2.5), QPointF(-15, 2.5) );
+    p->drawLine( QPointF( 12.5, 0), QPointF( 17.5, 0) );
+    p->setPen( symbolPen );
 
     QFont motorFont = p->font();
     motorFont.setBold( true );
-    motorFont.setPixelSize( 18 );
+    motorFont.setPixelSize( 15 );
+
+    double componentAngle = fmod( rotation(), 360.0 );
+    if( componentAngle < 0 ) componentAngle += 360.0;
+
+    int rpm = 0;
+    bool running = Simulator::self()->isRunning();
+    if( running ) rpm = qRound( -m_speed*m_rpm );
+
+    // Keep the static M upright on the page. While the motor is running,
+    // rotate it by the simulated shaft angle, independently of component
+    // orientation.
+    double motorAngle = 0;
+    if( running && rpm != 0 ) motorAngle = m_ang/16.0;
+
+    p->save();
+    p->rotate( motorAngle-componentAngle );
     p->setFont( motorFont );
-    p->drawText( QRectF(-20, -15, 40, 30), Qt::AlignCenter, "M" );
+    p->drawText( QRectF(-14, -11, 28, 22), Qt::AlignCenter, "M" );
+    p->restore();
 
-    if( Simulator::self()->isRunning() )
+    if( running )
     {
-        int rpm = qRound( -m_speed*m_rpm );
-
-        if( rpm != 0 )
-        {
-            QPainterPath arrow;
-            if( rpm > 0 )
-            {
-                arrow.moveTo( -17, -20 );
-                arrow.cubicTo( -9, -30, 9, -30, 17, -20 );
-                arrow.moveTo( 17, -20 );
-                arrow.lineTo( 11, -21 );
-                arrow.moveTo( 17, -20 );
-                arrow.lineTo( 16, -14 );
-            }
-            else
-            {
-                arrow.moveTo( 17, -20 );
-                arrow.cubicTo( 9, -30, -9, -30, -17, -20 );
-                arrow.moveTo( -17, -20 );
-                arrow.lineTo( -11, -21 );
-                arrow.moveTo( -17, -20 );
-                arrow.lineTo( -16, -14 );
-            }
-            p->drawPath( arrow );
-        }
-
         QFont rpmFont = p->font();
         rpmFont.setBold( false );
-        rpmFont.setPixelSize( 10 );
+        rpmFont.setPixelSize( 9 );
+
+        // At 180 and 270 degrees turn the label locally by 180 degrees.
+        // It consequently remains readable from the bottom/right side of
+        // the page and is placed below horizontal motors or left of vertical
+        // motors, as used in technical documentation.
+        int quadrant = qRound( componentAngle/90.0 ) % 4;
+        p->save();
+        if( quadrant >= 2 ) p->rotate( 180 );
         p->setFont( rpmFont );
-        p->drawText( QRectF(-36, 32, 72, 15), Qt::AlignCenter
+        p->drawText( QRectF(-32, 26, 64, 14), Qt::AlignCenter
                    , QString::number(rpm)+" RPM" );
+        p->restore();
     }
     Component::paintSelected( p );
 }
