@@ -1,61 +1,73 @@
-# SimulIDE 
+# SimulIDE-Edu-Si
 
-Electronic Circuit Simulator
+**Pedagoška prilagoditev simulatorja SimulIDE za pouk elektronike v osnovni šoli in pripravo učnih gradiv.**
 
-**SimulIDE is a simple real time electronic circuit simulator**, intended for hobbyist or students to learn and experiment with analog and digital electronic circuits and microcontrollers.
-It supports PIC, AVR, Arduino and other MCUs and MPUs.
+Projekt temelji na [SimulIDE avtorja Arcachofo / Santiaga Gonzáleza](https://github.com/Arcachofo/SimulIDE-dev). Ta samostojni fork prilagaja predvsem videz shem: preglednejše simbole, ozadje za tisk in prikaz delovanja med simulacijo. Privzeta razvojna veja je **`education`**.
 
-**Simplicity, speed and ease of use** are the key features of this simulator.
-You can create, simulate and interact with your circuits within minutes, just drag components from the list, drop into the circuit, connect them and push the “power button” to see how it works.
+Ime Si označuje slovenski pedagoški kontekst; uporabniški vmesnik ni v celoti preveden v slovenščino. Prilagojeni simboli se zgledujejo po IEEE simbolih; projekt ne zagotavlja popolne skladnosti s standardom.
 
-Simulation speed is one of the most relevant characteristics of this simulator.
-It has been deeply optimized to achieve excellent speeds and low cpu usage.
+## Pedagoške prilagoditve
 
-SimulIDE also features a code Editor and Debugger for Arduino, GcBasic, PIC asm, AVR asm and others. It is possible to write, compile and do basic debugging with breakpoints, watch registers and global variables.
+- **Ozadje sheme:** v svetli temi lahko izberete belo ali drugo barvo risalne površine. Nastavitev se ohrani ob naslednjem zagonu.
+- **LED:** poenostavljen diodni simbol s puščicama za svetlobo. Trikotnik je pri ugasnjeni LED prazen, med svetenjem pa se zapolni glede na barvo in intenziteto.
+- **Napajalni potencial Rail:** kratka črta z oznako dejanske napetosti, na primer `+5V`, `-5V` ali `0V`.
+- **DC motor:** manjši krožni simbol s črko `M` ter oznakama polaritete znotraj kroga. Med simulacijo se črka vrti glede na izračunano hitrost, ob simbolu pa je prikazan RPM. Položaj in orientacija napisa se prilagajata rotaciji motorja.
+- **Stikala, potisne tipke in relejni kontakti:** kontaktna mesta so označena z belimi krožci s črnim robom, tudi pri večpolnih izvedbah in Double Throw.
+- **Priključne črte komponent:** širina 1,6 je usklajena z običajnimi povezovalnimi žicami.
 
+Prilagoditve ohranjajo obstoječe električne modele in položaje priključkov. Vezja z ustreznimi komponentami ob odpiranju dobijo novi videz. Nekatere sličice komponent v knjižnici še prikazujejo izvirne simbole.
 
-## Building SimulIDE:
+## Prevajanje v Linuxu
 
-Build dependencies:
+Potrebujete Git, prevajalnik C++, Make ter razvojna orodja in knjižnice **Qt 5**:
 
- - Qt5 dev packages
- - Qt5Core
- - Qt5Gui
- - Qt5Xml
- - Qt5Widgets
- - Qt5Concurrent
- - Qt5svg dev
- - Qt5 Multimedia dev
- - Qt5 Serialport dev
- - Qt5 qmake
+- qmake in orodja Qt, vključno z `lrelease`;
+- Core, Gui, Widgets, Xml, Concurrent in Network;
+- Svg, Multimedia in SerialPort.
 
- 
-Once installed go to build_XX folder, then:
+Imena paketov so odvisna od distribucije. Uporabite qmake za Qt 5.
 
-```
-$ qmake
-$ make
+```bash
+git clone --branch education https://github.com/davidrihtarsic/SimulIDE-Edu-Si.git
+cd SimulIDE-Edu-Si/build_XX
+qmake
+make -j4
 ```
 
-In folder build_XX/executables/SimulIDE_x.x.x you will find executable and all files needed to run SimulIDE.
+Rezultat je v mapi `build_XX/executables/SimulIDE_2.0.0-/`. Ime izhodne mape se lahko pri prihodnjih različicah spremeni.
 
+Po spremembi izvorne kode v obstoječi lokalni kopiji ponovno izvedite `make -j4` v mapi `build_XX`. Če se spremeni konfiguracija projekta, pred tem ponovno izvedite tudi `qmake`.
 
+## Zagon
 
-## Running SimulIDE:
+Iz mape `build_XX` zaženite:
 
-Run time dependencies:
+```bash
+./executables/SimulIDE_2.0.0-/simulide
+```
 
- - Qt5Core
- - Qt5Gui
- - Qt5Xml
- - Qt5svg
- - Qt5Widgets
- - Qt5Concurrent
- - Qt5 Multimedia
- - Qt5 Multimedia Plugins
- - Qt5 Serialport
+Za prenos programa na drug računalnik ohranite celotno izhodno mapo skupaj s podatki in drugimi priloženimi datotekami. Na ciljnem sistemu morajo biti nameščene ustrezne izvajalne knjižnice Qt 5; za večpredstavnostne funkcije so lahko potrebni tudi vtičniki Qt Multimedia.
 
+## Priprava sheme za učna gradiva
 
-No need for installation, place SimulIDE folder wherever you want and run the executable.
+1. V nastavitvah programa izberite temo **Light**.
+2. Pri **Canvas Background** izberite belo barvo. **Reset** povrne izvirno barvo ozadja.
+3. Za čisto risalno površino izključite **Draw Grid**.
+4. Za prikaz osnovnih simbolov ustavite simulacijo. Pri motorju so takrat podatki RPM skriti, črka `M` pa je pokončna.
+
+## O izvirnem SimulIDE
+
+SimulIDE je simulator elektronskih vezij v realnem času za učenje in eksperimentiranje z analogno in digitalno elektroniko ter mikrokrmilniki. Podpira med drugim PIC, AVR in Arduino. Vključuje tudi urejevalnik kode ter možnosti prevajanja in razhroščevanja za podprta orodja.
+
+- [Izvorni repozitorij](https://github.com/Arcachofo/SimulIDE-dev)
+- [Repozitorij pedagoške različice](https://github.com/davidrihtarsic/SimulIDE-Edu-Si)
+
+## Avtorstvo in licence
+
+Izvirni projekt in navedbe njegovih avtorjev so ohranjeni. Pedagoško prilagoditev razvija David Rihtaršič s pomočjo Codexa.
+
+Obstoječa datoteka [copyright.txt](copyright.txt) navaja GNU AGPL različice 3 za datoteke Santiaga Gonzáleza ter GNU GPL različice 3 za prispevke drugih avtorjev, z možnostjo uporabe poznejše različice skladno z navedenimi pogoji. Podrobnosti so v [copyright.txt](copyright.txt), [COPYING](COPYING) ter posameznih datotekah in priloženih knjižnicah. Ohranite licenčne in avtorske navedbe.
+
+Program je na voljo brez jamstva, skladno z navedenimi licencami.
 
 
