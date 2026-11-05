@@ -29,9 +29,16 @@ Shema med simulacijo prikazuje belo ozadje brez mreže, poenoteno debelino prikl
 
 Za Windows potrebujete posebej prevedeno različico programa z datoteko `simulide.exe`. Izvršna datoteka, prevedena v Linuxu, v Windows ne deluje neposredno. Pedagoška različica je bila doslej preverjena v Linuxu; prevajanje in delovanje v Windows še nista preverjena.
 
-### Prevajanje iz izvorne kode (Win)
+### Samodejna priprava testnega paketa
 
-> Več sreče prihodnjič - 😄
+1. V repozitoriju odprite **Actions** in po potrebi omogočite izvajanje workflowov v svojem forku.
+2. Izberite **Windows package**, kliknite **Run workflow** in izberite vejo **education**.
+3. Po uspešno zaključeni gradnji odprite njen povzetek in v razdelku **Artifacts** prenesite **SimulIDE-Edu-Si-Windows-x64**.
+4. Razširite celoten ZIP in zaženite `simulide.exe`. Ohranite vse DLL-je in podmape ob programu.
+
+Workflow prevede program z MSYS2 / MinGW in Qt 5, zbere potrebne knjižnice ter preveri osnovni zagon brez razvojnega okolja na poti PATH. To preverjanje ne nadomesti ročnega preizkusa vezij v Windows. Paket je rezultat gradnje, ne samodejno objavljena izdaja v Releases.
+
+### Prevajanje iz izvorne kode (Win)
 
 Če pripravljenega paketa še ni, je treba vejo `education` prevesti v Windows. Projekt uporablja qmake in Qt 5 ter prevajalske zastavice GCC, zato je smiselno izhodišče **Qt Creator s kompletom Qt 5 za MinGW**. Potrebne module Qt najdete v spodnjem seznamu odvisnosti za Linux; projekt poleg njih povezuje tudi zlib (`-lz`).
 

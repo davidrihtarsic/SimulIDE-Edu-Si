@@ -1,0 +1,66 @@
+name: Windows package
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [education]
+    paths:
+      - 'src/**'
+      - 'resources/**'
+      - 'SimulIDE.pri'
+      - 'scripts/windows/**'
+      - '.github/workflows/windows.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            python
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-make
+            mingw-w64-x86_64-qt5-base
+            mingw-w64-x86_64-qt5-svg
+            mingw-w64-x86_64-qt5-multimedia
+            mingw-w64-x86_64-qt5-serialport
+            mingw-w64-x86_64-qt5-tools
+            mingw-w64-x86_64-zlib
+      - name: Build and package
+        run: bash scripts/windows/build.sh
+      - name: Check startup without Qt on PATH
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:PATH = "$env:SystemRoot\System32;$env:SystemRoot"
+          Remove-Item Env:QT_PLUGIN_PATH -ErrorAction SilentlyContinue
+          Remove-Item Env:QT_QPA_PLATFORM_PLUGIN_PATH -ErrorAction SilentlyContinue
+          $folder = Join-Path $env:GITHUB_WORKSPACE 'dist/SimulIDE-Edu-Si-Windows-x64'
+          $process = Start-Process -FilePath "$folder/simulide.exe" -WorkingDirectory $folder -PassThru
+          try {
+            if (-not $process.WaitForInputIdle(30000)) { throw 'Application did not become ready.' }
+            Start-Sleep -Seconds 5
+            $process.Refresh()
+            if ($process.HasExited) { throw "Application exited: $($process.ExitCode)" }
+            if ($process.MainWindowHandle -eq 0) { throw 'No application window was created.' }
+          } finally {
+            if (-not $process.HasExited) { Stop-Process -Id $process.Id }
+          }
+      - name: Upload portable package
+        uses: actions/upload-artifact@v4
+        with:
+          name: SimulIDE-Edu-Si-Windows-x64
+          path: dist/SimulIDE-Edu-Si-Windows-x64/
+          if-no-files-found: error
+          retention-days: 30

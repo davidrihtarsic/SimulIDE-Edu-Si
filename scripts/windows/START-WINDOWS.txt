@@ -1,0 +1,16 @@
+SimulIDE-Edu-Si - Windows x64 (testni paket)
+
+1. Razsirite celoten arhiv ZIP v svojo mapo.
+2. Dvokliknite simulide.exe.
+3. Ohranite vse DLL-je in podmape ob programu.
+
+Program je samostojna pedagoska prilagoditev projekta SimulIDE.
+Izvorna koda: https://github.com/davidrihtarsic/SimulIDE-Edu-Si
+Razvojna veja: education
+Tocen commit gradnje: SOURCE-COMMIT.txt
+Knjiznice in orodja gradnje: BUILD-PACKAGES.txt
+Avtorstvo in licence: copyright.txt, COPYING in licenses/
+
+Uspeh samodejnega preverjanja zagona se ne pomeni, da so vse funkcije
+rocno preizkusene. Pred uporabo pri pouku preverite svoja vezja,
+simulacijo in morebitna zunanja orodja za mikrokrmilnike.
