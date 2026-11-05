@@ -4,6 +4,15 @@ set -euo pipefail
 cd "$(dirname "$0")/../.."
 repo_dir="$PWD"
 
+# Qt loads ANGLE dynamically, so it is optional in the MSYS2 package graph
+# but windeployqt expects these runtime libraries when creating the package.
+for library in libGLESv2.dll libEGL.dll; do
+    if [[ ! -f "/mingw64/bin/$library" ]]; then
+        echo "Missing $library: install mingw-w64-x86_64-angleproject." >&2
+        exit 1
+    fi
+done
+
 mkdir -p resources/qm
 for translation in resources/translations/*.ts resources/translations/qt/*.ts; do
     lrelease-qt5 "$translation" -qm "resources/qm/$(basename "${translation%.ts}").qm"

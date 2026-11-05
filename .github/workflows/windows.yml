@@ -36,6 +36,7 @@ jobs:
             mingw-w64-x86_64-qt5-multimedia
             mingw-w64-x86_64-qt5-serialport
             mingw-w64-x86_64-qt5-tools
+            mingw-w64-x86_64-angleproject
             mingw-w64-x86_64-zlib
       - name: Build and package
         run: bash scripts/windows/build.sh
