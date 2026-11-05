@@ -4,15 +4,15 @@
 
 Projekt temelji na [SimulIDE avtorja Arcachofo / Santiaga Gonzáleza](https://github.com/Arcachofo/SimulIDE-dev). Ta samostojni fork prilagaja predvsem videz shem: preglednejše simbole, ozadje za tisk in prikaz delovanja med simulacijo. Privzeta razvojna veja je **`education`**.
 
-Ime Si označuje slovenski pedagoški kontekst; uporabniški vmesnik ni v celoti preveden v slovenščino. Prilagojeni simboli se zgledujejo po IEEE simbolih; projekt ne zagotavlja popolne skladnosti s standardom.
+Ime Si označuje slovenski pedagoški kontekst; uporabniški vmesnik ni preveden v slovenščino. Prilagojeni simboli se zgledujejo po IEEE simbolih; projekt ne zagotavlja popolne skladnosti s standardom.
 
 ## Pedagoške prilagoditve
 
 - **Ozadje sheme:** v svetli temi lahko izberete belo ali drugo barvo risalne površine. Nastavitev se ohrani ob naslednjem zagonu.
-- **LED:** poenostavljen diodni simbol s puščicama za svetlobo. Trikotnik je pri ugasnjeni LED prazen, med svetenjem pa se zapolni glede na barvo in intenziteto.
-- **Napajalni potencial Rail:** kratka črta z oznako dejanske napetosti, na primer `+5V`, `-5V` ali `0V`.
+- **LED:** poenostavljen diodni simbol brez črnega kroga. Trikotnik je pri ugasnjeni LED prozoren, med svetenjem pa se zapolni glede na barvo in intenziteto.
+- **Napajalni potencial (Rail):** kratka črta z oznako dejanske napetosti, na primer `+5V`, `-5V` ali `0V`.
 - **DC motor:** manjši krožni simbol s črko `M` ter oznakama polaritete znotraj kroga. Med simulacijo se črka vrti glede na izračunano hitrost, ob simbolu pa je prikazan RPM. Položaj in orientacija napisa se prilagajata rotaciji motorja.
-- **Stikala, potisne tipke in relejni kontakti:** kontaktna mesta so označena z belimi krožci s črnim robom, tudi pri večpolnih izvedbah in Double Throw.
+- **Stikala, tipke in relejni kontakti:** kontaktna mesta so označena z belimi krožci s črnim robom, tudi pri večpolnih izvedbah.
 - **Priključne črte komponent:** širina 1,6 je usklajena z običajnimi povezovalnimi žicami.
 
 Prilagoditve ohranjajo obstoječe električne modele in položaje priključkov. Vezja z ustreznimi komponentami ob odpiranju dobijo novi videz. Nekatere sličice komponent v knjižnici še prikazujejo izvirne simbole.
@@ -22,6 +22,22 @@ Prilagoditve ohranjajo obstoječe električne modele in položaje priključkov. 
 ![Primer sheme v SimulIDE-Edu-Si: Arduino Uno, potisna tipka s kontaktnimi krožci, LED, napajalna potenciala in DC motor s prikazom RPM ter osciloskop.](docs/images/simulide-edu-primer-sheme.png)
 
 Shema med simulacijo prikazuje belo ozadje brez mreže, poenoteno debelino priključnih črt, prilagojene simbole LED in napajalnih potencialov, kontaktne krožce potisne tipke ter motor z animirano črko M in podatkom o hitrosti. Osciloskop prikazuje krmilni signal.
+
+## Zagon v Windows
+
+> več sreče prihodnjič - 😀 
+
+Za Windows potrebujete posebej prevedeno različico programa z datoteko `simulide.exe`. Izvršna datoteka, prevedena v Linuxu, v Windows ne deluje neposredno. Pedagoška različica je bila doslej preverjena v Linuxu; prevajanje in delovanje v Windows še nista preverjena.
+
+### Prevajanje iz izvorne kode (Win)
+
+> Več sreče prihodnjič - 😄
+
+Če pripravljenega paketa še ni, je treba vejo `education` prevesti v Windows. Projekt uporablja qmake in Qt 5 ter prevajalske zastavice GCC, zato je smiselno izhodišče **Qt Creator s kompletom Qt 5 za MinGW**. Potrebne module Qt najdete v spodnjem seznamu odvisnosti za Linux; projekt poleg njih povezuje tudi zlib (`-lz`).
+
+V Qt Creatorju odprite `build_XX/SimulIDE_Build.pro`, izberite ustrezen komplet Qt 5 / MinGW in konfiguracijo **Release**. To je izhodišče za pripravo Windows različice, ne preizkušen postopek za ta fork; morebitne prilagoditve gradnje je treba še preveriti.
+
+Za uporabo na računalniku brez razvojnega okolja mora pripravljavec paketa poleg programa vključiti njegove podatkovne datoteke, knjižnice Qt in vtičnike. Orodje [windeployqt](https://wiki.qt.io/Deploy_an_Application_on_Windows) pomaga zbrati odvisnosti Qt; uporabiti je treba različico iz istega kompleta Qt 5, s katerim je bil program preveden. Paket je treba nato preizkusiti še na računalniku brez nameščenega razvojnega okolja.
 
 ## Prevajanje v Linuxu
 
@@ -44,7 +60,7 @@ Rezultat je v mapi `build_XX/executables/SimulIDE_2.0.0-/`. Ime izhodne mape se 
 
 Po spremembi izvorne kode v obstoječi lokalni kopiji ponovno izvedite `make -j4` v mapi `build_XX`. Če se spremeni konfiguracija projekta, pred tem ponovno izvedite tudi `qmake`.
 
-## Zagon
+## Zagon v Linuxu
 
 Iz mape `build_XX` zaženite:
 
