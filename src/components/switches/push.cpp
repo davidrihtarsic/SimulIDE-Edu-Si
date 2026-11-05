@@ -124,9 +124,12 @@ void Push::paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* 
         if( m_closed ) p->drawLine(-9,-2-offset, 9,-2-offset );
         else           p->drawLine(-9,-6-offset, 9,-6-offset );
 
-        double contactY = -offset;
-        drawContact( p, QPointF(-10, contactY) );
-        drawContact( p, QPointF( 10, contactY) );
+        for( int j=0; j<m_numthrows; ++j )
+        {
+            double contactY = -4*m_pin0-offset-8*j;
+            drawContact( p, QPointF(-10, contactY) );
+            drawContact( p, QPointF( 10, contactY) );
+        }
     }
     if( m_numPoles > 1 )
     {

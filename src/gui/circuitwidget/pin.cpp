@@ -420,7 +420,7 @@ void Pin::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
         p->setPen( pen );
         p->drawLine( QPointF( x, y ), QPointF( x+width, y ) );
     }
-    QPen pen( QColor( *m_foreColor ), 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
+    QPen pen( QColor( *m_foreColor ), 1.6, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
     //QPen pen( m_color[0], 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
 
     if     ( m_unused  ) pen.setColor( QColor( 75, 120, 170 ));
