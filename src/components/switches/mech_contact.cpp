@@ -111,7 +111,7 @@ void MechContact::SetupSwitches( int poles, int throws )
 
         QPoint pinpos = QPoint(-16,-4*m_pin0-16*i );
         pin = new Pin( 180, pinpos, m_id+"-pinP"+QString::number(pinN), 0, this);
-        pin->setFlag( QGraphicsItem::ItemStacksBehindParent, false ); // draw Pins on top
+        pin->setFlag( QGraphicsItem::ItemStacksBehindParent, true ); // contact markers stay above pin lines
         m_pin[pinN] = pin;
 
         for( int j=0; j<throws; j++ )
@@ -127,7 +127,7 @@ void MechContact::SetupSwitches( int poles, int throws )
 
             pinpos = QPoint( 16,-4*m_pin0-16*i-8*j);
             pin = new Pin( 0, pinpos, reid+"pinN", 1, this);
-            pin->setFlag( QGraphicsItem::ItemStacksBehindParent, false ); // draw Pins on top
+            pin->setFlag( QGraphicsItem::ItemStacksBehindParent, true ); // contact markers stay above pin lines
 
             m_pin[ start+cont ] = pin;
             m_ePin[ ePinN+1 ]   = pin;

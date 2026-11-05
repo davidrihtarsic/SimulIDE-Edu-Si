@@ -91,14 +91,14 @@ void Push::SetupSwitches( int poles, int throws )
 
             QPoint pinpos = QPoint(-16,-4*m_pin0-16*i-8*j);
             pin = new Pin( 180, pinpos, m_id+"-pinP"+QString::number(pinN), 0, this);
-            pin->setFlag( QGraphicsItem::ItemStacksBehindParent, false ); // draw Pins on top
+            pin->setFlag( QGraphicsItem::ItemStacksBehindParent, true ); // contact markers stay above pin lines
             m_pin[pinN] = pin;
             m_switches[ tN ]->setEpin( 0, pin );
             pinN++;
 
             pinpos = QPoint( 16,-4*m_pin0-16*i-8*j);
             pin = new Pin( 0, pinpos, reid+"pinN", 1, this);
-            pin->setFlag( QGraphicsItem::ItemStacksBehindParent, false ); // draw Pins on top
+            pin->setFlag( QGraphicsItem::ItemStacksBehindParent, true ); // contact markers stay above pin lines
             m_pin[pinN] = pin;
             m_switches[ tN ]->setEpin( 1, pin );
             pinN++;
