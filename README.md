@@ -2,6 +2,8 @@
 
 **Pedagoška prilagoditev simulatorja SimulIDE za pouk elektronike v osnovni šoli in pripravo učnih gradiv.**
 
+**[Prenesi za Windows x64 — edu-0.1 (ZIP)](https://github.com/davidrihtarsic/SimulIDE-Edu-Si/releases/download/edu-0.1/SimulIDE-Edu-Si-Windows-x64.zip)** · [Opis preizkusne izdaje](https://github.com/davidrihtarsic/SimulIDE-Edu-Si/releases/tag/edu-0.1)
+
 Projekt temelji na [SimulIDE avtorja Arcachofo / Santiaga Gonzáleza](https://github.com/Arcachofo/SimulIDE-dev). Ta samostojni fork prilagaja predvsem videz shem: preglednejše simbole, ozadje za tisk in prikaz delovanja med simulacijo. Privzeta razvojna veja je **`education`**.
 
 Ime Si označuje slovenski pedagoški kontekst; uporabniški vmesnik ni preveden v slovenščino. Prilagojeni simboli se zgledujejo po IEEE simbolih; projekt ne zagotavlja popolne skladnosti s standardom.
@@ -25,9 +27,13 @@ Shema med simulacijo prikazuje belo ozadje brez mreže, poenoteno debelino prikl
 
 ## Zagon v Windows
 
-> več sreče prihodnjič - 😀 
+Na voljo je [preizkusna izdaja edu-0.1 za Windows x64](https://github.com/davidrihtarsic/SimulIDE-Edu-Si/releases/download/edu-0.1/SimulIDE-Edu-Si-Windows-x64.zip). Ročno sta bila preverjena zagon programa in nalaganje programa Arduino; vse funkcije še niso sistematično preizkušene.
 
-Za Windows potrebujete posebej prevedeno različico programa z datoteko `simulide.exe`. Izvršna datoteka, prevedena v Linuxu, v Windows ne deluje neposredno. Pedagoška različica je bila doslej preverjena v Linuxu; prevajanje in delovanje v Windows še nista preverjena.
+1. Prenesite ZIP prek zgornje povezave.
+2. Z možnostjo **Extract All / Izvleci vse** razširite celoten arhiv v svojo mapo.
+3. V razširjeni mapi dvokliknite `simulide.exe`.
+
+Ohranite vse DLL-je in podmape ob programu. Za bližnjico na namizju ustvarite povezavo do `simulide.exe`, namesto da premaknete samo to datoteko. Arhiv **Source code**, ki ga GitHub ponudi ob izdaji, vsebuje izvorno kodo in ni pripravljen program za Windows.
 
 ### Samodejna priprava testnega paketa
 
