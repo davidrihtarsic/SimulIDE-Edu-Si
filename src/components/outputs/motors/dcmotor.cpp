@@ -235,15 +235,26 @@ void DcMotor::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w 
         rpmFont.setBold( false );
         rpmFont.setPixelSize( 9 );
 
-        // At 180 and 270 degrees turn the label locally by 180 degrees.
-        // It consequently remains readable from the bottom/right side of
-        // the page and is placed below horizontal motors or left of vertical
-        // motors, as used in technical documentation.
         int quadrant = qRound( componentAngle/90.0 ) % 4;
+        QPointF rpmPos;
+        double rpmAngle;
+
+        // Horizontal text is readable from the bottom of the page. Vertical
+        // text reads bottom-to-top and is readable from the right-hand edge.
+        // The position is below horizontal motors and left of vertical ones.
+        switch( quadrant )
+        {
+            case 0: rpmPos = QPointF( 0,  33 ); rpmAngle =   0; break;
+            case 1: rpmPos = QPointF( 0,  33 ); rpmAngle = 180; break;
+            case 2: rpmPos = QPointF( 0, -33 ); rpmAngle = 180; break;
+            default:rpmPos = QPointF( 0, -33 ); rpmAngle =   0; break;
+        }
+
         p->save();
-        if( quadrant >= 2 ) p->rotate( 180 );
+        p->translate( rpmPos );
+        p->rotate( rpmAngle );
         p->setFont( rpmFont );
-        p->drawText( QRectF(-32, 26, 64, 14), Qt::AlignCenter
+        p->drawText( QRectF(-32, -7, 64, 14), Qt::AlignCenter
                    , QString::number(rpm)+" RPM" );
         p->restore();
     }
