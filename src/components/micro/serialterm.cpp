@@ -71,8 +71,9 @@ SerialTerm::SerialTerm( QString type, QString id )
     for( int bus=0; bus<2; ++bus )
     {
         QString name = bus == 0 ? "Tx-bus" : "Rx-bus";
-        Pin* pin = new Pin( 0, QPoint(120, bus == 0 ? -8 : 8), id+"-pin"+QString::number(bus+2), 0, this );
+        Pin* pin = new Pin( 0, QPoint(88, bus == 0 ? -8 : 8), id+"-pin"+QString::number(bus+2), 0, this );
         pin->setIsBus( true );
+        pin->setFontSize( 6 );
         pin->setLabelText( name );
         pin->setLabelColor( Qt::white );
         pin->setVisible( false );
@@ -110,11 +111,6 @@ SerialTerm::SerialTerm( QString type, QString id )
 
     Simulator::self()->addToUpdateList( this );
 
-    addPropGroup( { tr("Main"), {
-        new BoolProp<SerialTerm>("ShowDataBuses", tr("Show data buses"), ""
-                                , this, &SerialTerm::showDataBuses, &SerialTerm::setShowDataBuses ),
-    }, 0 } );
-
     addPropGroup( { tr("Config"), {
         new IntProp<SerialTerm>("Baudrate", tr("Baudrate"),"_Bd"
                                , this, &SerialTerm::baudRate, &SerialTerm::setBaudRate,0,"uint" ),
@@ -124,6 +120,11 @@ SerialTerm::SerialTerm( QString type, QString id )
 
         new IntProp<SerialTerm>("StopBits", tr("Stop Bits"),"_bits"
                                , this, &SerialTerm::stopBits, &SerialTerm::setStopBits,0,"uint" ),
+    }, 0 } );
+
+    addPropGroup( { tr("Main"), {
+        new BoolProp<SerialTerm>("ShowDataBuses", tr("Show data buses"), ""
+                                , this, &SerialTerm::showDataBuses, &SerialTerm::setShowDataBuses ),
     }, 0 } );
 
     addPropGroup( {"Hidden", {
@@ -144,7 +145,7 @@ void SerialTerm::setShowDataBuses( bool show )
     if( Simulator::self()->isRunning() ) CircuitWidget::self()->powerCircOff();
     prepareGeometryChange();
     m_showDataBuses = show;
-    m_area = show ? QRect(-16,-16,128,32) : QRect(-16,-16,72,32);
+    m_area = show ? QRect(-16,-16,96,32) : QRect(-16,-16,72,32);
     for( Pin* pin : m_dataBus )
     {
         if( !show ) pin->removeConnector();

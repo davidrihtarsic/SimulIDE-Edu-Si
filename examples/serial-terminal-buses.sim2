@@ -6,8 +6,8 @@
 
 <item itemtype="Connector" uid="Connector-1" startpinid="SerialTerm-1-pin0" endpinid="SerialTerm-1-pin1" pointList="-24,-8,-48,-8,-48,8,-24,8" />
 
-<item itemtype="Connector" uid="Connector-2" startpinid="SerialTerm-1-pin2" endpinid="LAnalizer-2-Pin0" pointList="120,-8,160,-8,160,-64,192,-64" />
+<item itemtype="Connector" uid="Connector-2" startpinid="SerialTerm-1-pin2" endpinid="LAnalizer-2-Pin0" pointList="88,-8,160,-8,160,-64,192,-64" />
 
-<item itemtype="Connector" uid="Connector-3" startpinid="SerialTerm-1-pin3" endpinid="LAnalizer-2-Pin1" pointList="120,8,176,8,176,-48,192,-48" />
+<item itemtype="Connector" uid="Connector-3" startpinid="SerialTerm-1-pin3" endpinid="LAnalizer-2-Pin1" pointList="88,8,176,8,176,-48,192,-48" />
 
 </circuit>
