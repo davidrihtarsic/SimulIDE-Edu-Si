@@ -1,1 +1,34 @@
-resources/qm/*.*
+# Compiled translations (sources live in resources/translations).
+/resources/qm/*.*
+
+# Local build outputs; retain the Linux/Qt Creator project file.
+/build_XX/*
+!/build_XX/SimulIDE_Build.pro
+/build_windows/
+/build-*/
+/dist/
+
+# qmake and Qt Creator generated files and local settings.
+.qmake.stash
+.qmake.cache
+Makefile
+Makefile.Debug
+Makefile.Release
+*.pro.user*
+*.pri.user*
+*.o
+*.obj
+
+# Python bytecode and editor/OS temporary files.
+__pycache__/
+*.py[cod]
+*~
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Local assistant settings and credentials.
+/.agents/
+/.codex/
+/.aws/
