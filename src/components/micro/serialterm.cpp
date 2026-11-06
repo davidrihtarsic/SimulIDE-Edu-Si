@@ -13,6 +13,7 @@
 #include "itemlibrary.h"
 #include "simulator.h"
 #include "circuit.h"
+#include "circuitwidget.h"
 #include "usarttx.h"
 #include "usartrx.h"
 #include "iopin.h"
@@ -43,13 +44,16 @@ SerialTerm::SerialTerm( QString type, QString id )
           : Component( type, id )
           , UsartModule( nullptr, id+"-Uart" )
           , eElement( (id+"-eElement") )
+          , m_busGround( "" )
 {
     m_graphical = true;
 
     m_area = QRect(-16,-16, 72, 32 );
     setLabelPos(-20,-32 );
 
-    m_pin.resize(2);
+    m_pin.resize(4);
+    m_showDataBuses = false;
+    m_busGround.initialize();
 
     IoPin* pinTx = new IoPin( 180, QPoint(-24,-8), id+"-pin0", 0, this, output );
     pinTx->setLabelText( "Tx" );
@@ -63,6 +67,23 @@ SerialTerm::SerialTerm( QString type, QString id )
     m_pin[1] = pinRx;
     m_receiver->setPins( {pinRx} );
     m_receiving = false;
+
+    for( int bus=0; bus<2; ++bus )
+    {
+        QString name = bus == 0 ? "Tx-bus" : "Rx-bus";
+        Pin* pin = new Pin( 0, QPoint(120, bus == 0 ? -8 : 8), id+"-pin"+QString::number(bus+2), 0, this );
+        pin->setIsBus( true );
+        pin->setLabelText( name );
+        pin->setLabelColor( Qt::white );
+        pin->setVisible( false );
+        m_pin[bus+2] = m_dataBus[bus] = pin;
+        for( int bit=0; bit<8; ++bit )
+        {
+            ePin* driver = new ePin( id+"-"+name+"-bit"+QString::number(bit), bit );
+            driver->setHasCurrent( false );
+            m_busDriver[bus][bit] = driver;
+        }
+    }
 
     m_button = new CustomButton( );
     m_button->setMaximumSize( 44, 20 );
@@ -90,7 +111,8 @@ SerialTerm::SerialTerm( QString type, QString id )
     Simulator::self()->addToUpdateList( this );
 
     addPropGroup( { tr("Main"), {
-//new BoolProp  <Chip>( "Logic_Symbol","","", this, &Chip::logicSymbol, &Chip::setLogicSymbol ),
+        new BoolProp<SerialTerm>("ShowDataBuses", tr("Show data buses"), ""
+                                , this, &SerialTerm::showDataBuses, &SerialTerm::setShowDataBuses ),
     }, 0 } );
 
     addPropGroup( { tr("Config"), {
@@ -112,10 +134,68 @@ SerialTerm::SerialTerm( QString type, QString id )
 SerialTerm::~SerialTerm()
 {
     m_terminal->close();
+    for( int bus=0; bus<2; ++bus )
+        for( int bit=0; bit<8; ++bit ) delete m_busDriver[bus][bit];
+}
+
+void SerialTerm::setShowDataBuses( bool show )
+{
+    if( show == m_showDataBuses ) return;
+    if( Simulator::self()->isRunning() ) CircuitWidget::self()->powerCircOff();
+    prepareGeometryChange();
+    m_showDataBuses = show;
+    m_area = show ? QRect(-16,-16,128,32) : QRect(-16,-16,72,32);
+    for( Pin* pin : m_dataBus )
+    {
+        if( !show ) pin->removeConnector();
+        pin->setVisible( show && !m_hidden );
+    }
+    update();
+}
+
+void SerialTerm::initialize()
+{
+    // Simulation nodes belong to Simulator and are recreated at every start.
+    // Publish the bit nodes during initialize, before any channel is stamped.
+    if( !Simulator::self()->isRunning() || !m_showDataBuses ) return;
+    for( int bus=0; bus<2; ++bus )
+    {
+        if( !m_dataBus[bus]->connector() ) continue;
+        for( int bit=0; bit<8; ++bit )
+        {
+            eNode* node = new eNode( m_id+"-dataBus"+QString::number(bus)+"-bit"+QString::number(bit) );
+            m_busDriver[bus][bit]->setEnode( node );
+            m_dataBus[bus]->registerPinsW( node, bit );
+        }
+    }
+}
+
+void SerialTerm::setHidden( bool hide, bool hidArea, bool hidLabel )
+{
+    Component::setHidden( hide, hidArea, hidLabel );
+    for( Pin* pin : m_dataBus ) pin->setVisible( m_showDataBuses && !hide );
+}
+
+void SerialTerm::setBusByte( int bus, uint8_t byte )
+{
+    if( !m_showDataBuses ) return;
+    // All bits change in the same simulation event; the solver notifies
+    // observers after solving the entire word, avoiding intermediate values.
+    for( int bit=0; bit<8; ++bit )
+        m_busDriver[bus][bit]->stampCurrent( (byte & (1u<<bit)) ? 5.0 : 0.0 );
 }
 
 void SerialTerm::stamp()
 {
+    for( int bus=0; bus<2; ++bus )
+        for( int bit=0; bit<8; ++bit )
+        {
+            ePin* driver = m_busDriver[bus][bit];
+            driver->setEnodeComp( &m_busGround );
+            driver->createCurrent();
+            driver->stampAdmitance( 1.0 );
+            driver->stampCurrent( 0.0 );
+        }
     m_uartData.clear();
     m_sender->enable( true );
     m_receiver->enable( true );
@@ -154,6 +234,7 @@ void SerialTerm::sendByte( uint8_t data )
 
 void SerialTerm::byteReceived( uint8_t byte )
 {
+    setBusByte( 1, byte );
     m_receiver->getData();
     printIn( byte );
     m_terminal->received( byte );
@@ -162,6 +243,7 @@ void SerialTerm::byteReceived( uint8_t byte )
 
 void SerialTerm::frameSent( uint8_t data )
 {
+    setBusByte( 0, data );
     printOut( data );
     if( m_uartData.size() )
     {

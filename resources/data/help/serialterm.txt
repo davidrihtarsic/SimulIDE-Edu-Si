@@ -5,6 +5,14 @@ Click "Open" button to open terminal.
 
 Property: (default value)
 
+- Show data buses: (false)
+   Show optional 8-bit Tx-bus and Rx-bus outputs for a Logic Analyzer.
+   Enable Bus mode on the analyzer channel before connecting it.
+   Tx-bus holds the last completed transmitted byte; Rx-bus holds the
+   last received byte, both from this terminal's point of view.
+   Switching this option off disconnects the two bus wires.
+   Consecutive identical bytes leave the bus value unchanged.
+
 - Baudrate: (9600)
    Transmission speed.
 

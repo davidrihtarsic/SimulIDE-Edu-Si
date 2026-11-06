@@ -267,7 +267,6 @@ void PlotDisplay::paintEvent( QPaintEvent* /* event */ )
                     double x11 = x1+d;
                     double x22 = lastX-d;
                     double zero = y2+(y1-y2)/2;
-                    if( p1Volt == 0 ) y2 = y1 = zero;
 
                     p.drawLine( QPointF( x22, y2 ), QPointF( x11, y2 ) );
                     p.drawLine( QPointF( x22, y1 ), QPointF( x11, y1 ) );
@@ -288,12 +287,16 @@ void PlotDisplay::paintEvent( QPaintEvent* /* event */ )
                     else e = m_endX;
 
                     int w = e-s;
-                    int val = p1Volt;
-                    if( w > 20 && val != 0 )
+                    quint64 val = p1Volt;
+                    if( w > 20 )
                     {
+                        p.save();
                         if( m_expand ) p.setFont( m_fontL );
                         else           p.setFont( m_fontXS );
-                        p.drawText( x1, y1, w, m_scaleY[i], Qt::AlignCenter, "0x"+QString::number( val, 16 ).toUpper() );
+                        QString text = "0x"+QString::number( val, 16 ).rightJustified(2, '0').toUpper();
+                        if( QFontMetricsF(p.font()).horizontalAdvance(text)+6 <= w )
+                            p.drawText( s, y1, w, m_scaleY[i], Qt::AlignCenter, text );
+                        p.restore();
                     }
                 }
                 else{

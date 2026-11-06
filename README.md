@@ -16,6 +16,7 @@ Ime Si označuje slovenski pedagoški kontekst; uporabniški vmesnik ni preveden
 - **DC motor:** manjši krožni simbol s črko `M` ter oznakama polaritete znotraj kroga. Med simulacijo se črka vrti glede na izračunano hitrost, ob simbolu pa je prikazan RPM. Položaj in orientacija napisa se prilagajata rotaciji motorja.
 - **Stikala, tipke in relejni kontakti:** kontaktna mesta so označena z belimi krožci s črnim robom, tudi pri večpolnih izvedbah.
 - **Priključne črte komponent:** širina 1,6 je usklajena z običajnimi povezovalnimi žicami.
+- **Serial Terminal:** izbirni 8-bitni vodili **Tx-bus** in **Rx-bus** za spremljanje oddanih in prejetih bajtov z Logic Analyzerjem. [Navodila in preizkus](docs/serial-terminal-data-buses.md).
 
 Prilagoditve ohranjajo obstoječe električne modele in položaje priključkov. Vezja z ustreznimi komponentami ob odpiranju dobijo novi videz. Nekatere sličice komponent v knjižnici še prikazujejo izvirne simbole.
 

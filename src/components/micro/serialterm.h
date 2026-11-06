@@ -8,6 +8,7 @@
 #include "component.h"
 #include "e-element.h"
 #include "usartmodule.h"
+#include "e-node.h"
 
 class LibraryItem;
 class CustomButton;
@@ -23,11 +24,16 @@ class SerialTerm : public Component, public UsartModule, public eElement
  static Component* construct( QString type, QString id );
  static LibraryItem* libraryItem();
 
+        void initialize() override;
         virtual void stamp() override;
         virtual void updateStep() override;
         virtual void runEvent() override;
 
         void setSerialMon( bool s );
+
+        bool showDataBuses() { return m_showDataBuses; }
+        void setShowDataBuses( bool show );
+        void setHidden( bool hide, bool hidArea=false, bool hidLabel=false ) override;
 
         void sendByteArray( QByteArray data );
         virtual void sendByte( uint8_t data ) override;
@@ -50,6 +56,13 @@ class SerialTerm : public Component, public UsartModule, public eElement
         virtual void contextMenu( QGraphicsSceneContextMenuEvent* event, QMenu* menu ) override;
 
     private:
+        void setBusByte( int bus, uint8_t byte );
+
+        bool m_showDataBuses;
+        Pin* m_dataBus[2];
+        ePin* m_busDriver[2][8];
+        eNode m_busGround;
+
         bool m_receiving;
         bool m_sending;
 

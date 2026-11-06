@@ -1,0 +1,13 @@
+<circuit version="2.0.0-" rev="261105" stepSize="1000000" stepsPS="1000000" NLsteps="100000" reaStep="1000000" animate="0" anicurr="0" ansi="0" width="3200" height="2400" >
+
+<item itemtype="SerialTerm" CircId="SerialTerm-1" mainComp="false" Show_id="false" Show_Val="false" Pos="0,0" rotation="0" hflip="1" vflip="1" label="SerialTerm-1" idLabPos="-20,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" ShowDataBuses="true" Baudrate="9600 _Bd" DataBits="8 _bits" StopBits="1 _bits" SerialMon="false" />
+
+<item itemtype="LAnalizer" CircId="LAnalizer-2" mainComp="false" Show_id="false" Show_Val="false" Pos="280,0" rotation="0" hflip="1" vflip="1" label="LAnalizer-2" idLabPos="-90,-100" labelrot="0" valLabPos="-16,20" valLabRot="0" Basic_X="135 _px" Basic_Y="135 _px" BufferSize="100000" connectGnd="true" InputImped="10 MΩ" TestTime="0 ns" DoTest="false" TimDiv="100000000000" TimPos="0" VolDiv="0.15" Tunnels=",,,,,,,," Trigger="9" TimeStep="1000 _ps" AutoExport="false" TresholdR="2.5 V" Bus="true,true,false,false,false,false,false,false," TresholdF="2.5 V" />
+
+<item itemtype="Connector" uid="Connector-1" startpinid="SerialTerm-1-pin0" endpinid="SerialTerm-1-pin1" pointList="-24,-8,-48,-8,-48,8,-24,8" />
+
+<item itemtype="Connector" uid="Connector-2" startpinid="SerialTerm-1-pin2" endpinid="LAnalizer-2-Pin0" pointList="120,-8,160,-8,160,-64,192,-64" />
+
+<item itemtype="Connector" uid="Connector-3" startpinid="SerialTerm-1-pin3" endpinid="LAnalizer-2-Pin1" pointList="120,8,176,8,176,-48,192,-48" />
+
+</circuit>
